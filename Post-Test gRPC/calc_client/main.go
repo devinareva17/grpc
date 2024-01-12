@@ -65,14 +65,14 @@ func main() {
    if err != nil {
        log.Fatalf("Subtracting error: %s", err)
    }
-   log.Printf("%.2f + %.2f = %.2f", n1, n2, subtractResponse.N1)
+   log.Printf("%.2f - %.2f = %.2f", n1, n2, subtractResponse.N1)
 
    //Memanggil fungsi Multiply dari server
    multiplyResponse, err := client.Multiply(context.Background(), &pb.Request{N1:float32(n1), N2:float32(n2)})
    if err != nil {
        log.Fatalf("Multiplying error: %s", err)
    }
-   log.Printf("%.2f + %.2f = %.2f", n1, n2, multiplyResponse.N1)
+   log.Printf("%.2f * %.2f = %.2f", n1, n2, multiplyResponse.N1)
   
    //Memanggil fungsi Divide dari server
    divideResponse, err := client.Divide(context.Background(), &pb.Request{N1:float32(n1), N2:float32(n2)})
@@ -84,7 +84,7 @@ func main() {
            log.Fatalf("Dividing error: %s", err)
        }
    } else {
-       log.Printf("%.2f + %.2f = %.2f", n1, n2, divideResponse.N1)
+       log.Printf("%.2f / %.2f = %.2f", n1, n2, divideResponse.N1)
    }
 
 }
