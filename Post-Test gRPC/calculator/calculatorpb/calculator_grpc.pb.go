@@ -29,10 +29,10 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CalculatorClient interface {
-	Add(ctx context.Context, in *AddRequest, opts ...grpc.CallOption) (*AddReply, error)
-	Subtract(ctx context.Context, in *SubtractRequest, opts ...grpc.CallOption) (*SubtractReply, error)
-	Multiply(ctx context.Context, in *MultiplyRequest, opts ...grpc.CallOption) (*MultiplyReply, error)
-	Divide(ctx context.Context, in *DivideRequest, opts ...grpc.CallOption) (*DivideReply, error)
+	Add(ctx context.Context, in *Request, opts ...grpc.CallOption) (*AddResponse, error)
+	Subtract(ctx context.Context, in *Request, opts ...grpc.CallOption) (*SubstractResponse, error)
+	Multiply(ctx context.Context, in *Request, opts ...grpc.CallOption) (*MultiplyResponse, error)
+	Divide(ctx context.Context, in *Request, opts ...grpc.CallOption) (*DivideResponse, error)
 }
 
 type calculatorClient struct {
@@ -43,8 +43,8 @@ func NewCalculatorClient(cc grpc.ClientConnInterface) CalculatorClient {
 	return &calculatorClient{cc}
 }
 
-func (c *calculatorClient) Add(ctx context.Context, in *AddRequest, opts ...grpc.CallOption) (*AddReply, error) {
-	out := new(AddReply)
+func (c *calculatorClient) Add(ctx context.Context, in *Request, opts ...grpc.CallOption) (*AddResponse, error) {
+	out := new(AddResponse)
 	err := c.cc.Invoke(ctx, Calculator_Add_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -52,8 +52,8 @@ func (c *calculatorClient) Add(ctx context.Context, in *AddRequest, opts ...grpc
 	return out, nil
 }
 
-func (c *calculatorClient) Subtract(ctx context.Context, in *SubtractRequest, opts ...grpc.CallOption) (*SubtractReply, error) {
-	out := new(SubtractReply)
+func (c *calculatorClient) Subtract(ctx context.Context, in *Request, opts ...grpc.CallOption) (*SubstractResponse, error) {
+	out := new(SubstractResponse)
 	err := c.cc.Invoke(ctx, Calculator_Subtract_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -61,8 +61,8 @@ func (c *calculatorClient) Subtract(ctx context.Context, in *SubtractRequest, op
 	return out, nil
 }
 
-func (c *calculatorClient) Multiply(ctx context.Context, in *MultiplyRequest, opts ...grpc.CallOption) (*MultiplyReply, error) {
-	out := new(MultiplyReply)
+func (c *calculatorClient) Multiply(ctx context.Context, in *Request, opts ...grpc.CallOption) (*MultiplyResponse, error) {
+	out := new(MultiplyResponse)
 	err := c.cc.Invoke(ctx, Calculator_Multiply_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -70,8 +70,8 @@ func (c *calculatorClient) Multiply(ctx context.Context, in *MultiplyRequest, op
 	return out, nil
 }
 
-func (c *calculatorClient) Divide(ctx context.Context, in *DivideRequest, opts ...grpc.CallOption) (*DivideReply, error) {
-	out := new(DivideReply)
+func (c *calculatorClient) Divide(ctx context.Context, in *Request, opts ...grpc.CallOption) (*DivideResponse, error) {
+	out := new(DivideResponse)
 	err := c.cc.Invoke(ctx, Calculator_Divide_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -83,10 +83,10 @@ func (c *calculatorClient) Divide(ctx context.Context, in *DivideRequest, opts .
 // All implementations must embed UnimplementedCalculatorServer
 // for forward compatibility
 type CalculatorServer interface {
-	Add(context.Context, *AddRequest) (*AddReply, error)
-	Subtract(context.Context, *SubtractRequest) (*SubtractReply, error)
-	Multiply(context.Context, *MultiplyRequest) (*MultiplyReply, error)
-	Divide(context.Context, *DivideRequest) (*DivideReply, error)
+	Add(context.Context, *Request) (*AddResponse, error)
+	Subtract(context.Context, *Request) (*SubstractResponse, error)
+	Multiply(context.Context, *Request) (*MultiplyResponse, error)
+	Divide(context.Context, *Request) (*DivideResponse, error)
 	mustEmbedUnimplementedCalculatorServer()
 }
 
@@ -94,16 +94,16 @@ type CalculatorServer interface {
 type UnimplementedCalculatorServer struct {
 }
 
-func (UnimplementedCalculatorServer) Add(context.Context, *AddRequest) (*AddReply, error) {
+func (UnimplementedCalculatorServer) Add(context.Context, *Request) (*AddResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Add not implemented")
 }
-func (UnimplementedCalculatorServer) Subtract(context.Context, *SubtractRequest) (*SubtractReply, error) {
+func (UnimplementedCalculatorServer) Subtract(context.Context, *Request) (*SubstractResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Subtract not implemented")
 }
-func (UnimplementedCalculatorServer) Multiply(context.Context, *MultiplyRequest) (*MultiplyReply, error) {
+func (UnimplementedCalculatorServer) Multiply(context.Context, *Request) (*MultiplyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Multiply not implemented")
 }
-func (UnimplementedCalculatorServer) Divide(context.Context, *DivideRequest) (*DivideReply, error) {
+func (UnimplementedCalculatorServer) Divide(context.Context, *Request) (*DivideResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Divide not implemented")
 }
 func (UnimplementedCalculatorServer) mustEmbedUnimplementedCalculatorServer() {}
@@ -120,7 +120,7 @@ func RegisterCalculatorServer(s grpc.ServiceRegistrar, srv CalculatorServer) {
 }
 
 func _Calculator_Add_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddRequest)
+	in := new(Request)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -132,13 +132,13 @@ func _Calculator_Add_Handler(srv interface{}, ctx context.Context, dec func(inte
 		FullMethod: Calculator_Add_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CalculatorServer).Add(ctx, req.(*AddRequest))
+		return srv.(CalculatorServer).Add(ctx, req.(*Request))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Calculator_Subtract_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SubtractRequest)
+	in := new(Request)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -150,13 +150,13 @@ func _Calculator_Subtract_Handler(srv interface{}, ctx context.Context, dec func
 		FullMethod: Calculator_Subtract_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CalculatorServer).Subtract(ctx, req.(*SubtractRequest))
+		return srv.(CalculatorServer).Subtract(ctx, req.(*Request))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Calculator_Multiply_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MultiplyRequest)
+	in := new(Request)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -168,13 +168,13 @@ func _Calculator_Multiply_Handler(srv interface{}, ctx context.Context, dec func
 		FullMethod: Calculator_Multiply_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CalculatorServer).Multiply(ctx, req.(*MultiplyRequest))
+		return srv.(CalculatorServer).Multiply(ctx, req.(*Request))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Calculator_Divide_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DivideRequest)
+	in := new(Request)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -186,7 +186,7 @@ func _Calculator_Divide_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: Calculator_Divide_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CalculatorServer).Divide(ctx, req.(*DivideRequest))
+		return srv.(CalculatorServer).Divide(ctx, req.(*Request))
 	}
 	return interceptor(ctx, in, info, handler)
 }
