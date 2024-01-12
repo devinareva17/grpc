@@ -1,54 +1,94 @@
-# Simple Task
+# gRPC Project
 
-Devina Reva Kusuma
+cara set-up gRPC-golang project pada Linux
 
+## Installation
 
+GOLANG
 
-## Dockerfile
-step pertama yang dilakukan adalah dengan membuat dockerfile.
+Make sure that Golang is installed on your computer. if not, please [install](https://go.dev/doc/install) first.
+
+check golang version
+
 ```bash
-FROM ubuntu:20.04
-LABEL Name="Devina"
-LABEL Version="0.1.0"
-RUN apt-get update
-ENTRYPOINT ["/bin/bash"]
-
-FROM python:3.8
-WORKDIR /app
-COPY . /app
-EXPOSE 8081
-CMD ["python", "code.py"]
-```
-setelah dockerfile dibuat, file akan di-add, commit, dan push menuju repository.
-
-Setelah itu, repository yang sudah ada dockerfile diclone.
-
-
-## Build Docker
-setelah clone repository, masuk ke folder clone dan buat image dan container dengan command dibawah.
-```bash
-docker build -t python-app:3.8 .
-docker run -it -d --name devina python-app:3.8
-
+go version
 ```
 
+PROTOBUF
 
-## IP whoami
-dengan menggunakan docker inspect whoami,
-IP Address dari whoami adalah 172.17.0.2
+Install Protobuf compiler on Linux
 
-## Volume mount
 ```bash
-docker ps
-docker inspect f301b98cba61
-cd /home/local/.docker
-cat whoami
+apt install -y protobuf-compiler
+protoc --version  
+
+```
+Ensure that your GOBIN or GOPATH/bin directory is added to your system’s PATH environment variable. This allows the protoc compiler to find and use the protoc-gen-go-grpc plugin.
+
+add these comments on yout bashrc in order to add the GOPATH and GOROOT
+
+```bash
+sudo gedit .bashrc
 ```
 
-maka isi file tersembunyi yang diambil dari source Mount adalah:
-Oofooni1eeb9aengol3feekiph6fieve
+```bash
+export PATH=$PATH:$HOME/go/bin
+export PATH=$PATH:/usr/local/go/bin
+```
 
 
-## Image whoami
-image yang digunakan pada docker container whoami adalah secret:aequaix9De6dii1ay4HeeWai2obie6Ei
+## Set up Protoc
 
+Run go mod init {module name} to create a go.mod file for the current directory.
+
+
+```bash
+go mod init github.com/devinareva17/grpc
+```
+```bash
+go mod tidy
+```
+
+buat folder untuk menyimpan proto dan buat file .proto
+```
+project
+│└───calculator
+│   └───calculatorpb
+│       │   calculator.proto
+│   
+└───go.mod
+└───go.sum
+```
+
+
+install modul-modul berikut.
+```bash
+go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28
+```
+```bash
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2
+```
+
+run file proto
+```bash
+protoc --go_out=. --go-grpc_out=. calculator/calculatorpb/calculator.proto
+```
+
+## Set up Client-Server
+
+buat folder untuk membuat main program pada client dan server
+```
+project
+│└───calc_client
+│   └───main.go
+│ 
+│└───calc_server
+│   └───main.go
+│ 
+│└───calculator
+│   └───calculatorpb
+│       │   calculator.proto
+│   
+└───go.mod
+└───go.sum
+```
