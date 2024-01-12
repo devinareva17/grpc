@@ -121,7 +121,9 @@ go run calc_client/main.go 10 2
 # Test Case
 
 ## 1. n1 = 1000; n2 = 23
-
+```bash
+go run calc_client/main.go 1000 23
+```
 client output
 ```bash
 2024/01/12 21:48:47 1000.00 + 23.00 = 1023.00
@@ -136,6 +138,10 @@ listening on port 50053...
 ```
 
 ## 2. n1 = 23; n2 = 1000
+```bash
+go run calc_client/main.go 23 1000
+```
+
 Client Output
 ```bash
 2024/01/12 21:51:51 23.00 + 1000.00 = 1023.00
@@ -151,6 +157,10 @@ listening on port 50053...
 ```
 
 ## 3. n1 = 93.7; n2 = 4.5
+```bash
+go run calc_client/main.go 93.7 4.5
+```
+
 Client Output
 ```bash
 2024/01/12 21:54:00 93.70 + 4.50 = 98.20
@@ -167,6 +177,9 @@ listening on port 50053...
 ```
 
 ## 4. n1 = 10; n2 = 0
+```bash
+go run calc_client/main.go 10 0
+```
 Client Output
 ```bash
 2024/01/12 22:00:06 10.00 + 0.00 = 10.00
@@ -182,4 +195,3 @@ listening on port 50053...
 2024/01/12 21:54:00 Received request with N1=93.70 and N2=4.50
 2024/01/12 22:00:06 Received request with N1=10.00 and N2=0.00
 ```
-
