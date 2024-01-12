@@ -92,3 +92,13 @@ project
 └───go.mod
 └───go.sum
 ```
+
+## How to Run
+run server main.go
+```bash
+go run calc_server/main.go
+```
+run client main.go with adding 2 numbers to calculate
+```bash
+go run calc_client/main.go 10 2
+```
